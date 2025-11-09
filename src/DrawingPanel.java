@@ -19,14 +19,14 @@ public class DrawingPanel extends JPanel {
 
     public DrawingPanel() {
         setBackground(new Color(135, 206, 235));
-        setPreferredSize(new Dimension(1000, 700)); // Добавляем предпочтительный размер
+        setPreferredSize(new Dimension(1000, 700));
         generateScene();
         setupMouseListeners();
     }
 
     private void generateScene() {
         Random random = new Random();
-        int width = getWidth() > 0 ? getWidth() : 1000; // Запасная ширина
+        int width = getWidth() > 0 ? getWidth() : 1000;
 
         clouds = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -45,15 +45,14 @@ public class DrawingPanel extends JPanel {
 
         people = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
-            int x = 200 + random.nextInt(600);
-            int y = 350 + random.nextInt(50);
+            int x = 450 + random.nextInt(400);
+            int y = 350 + random.nextInt(30);
             people.add(new Person(x, y));
         }
 
-        // Передаем ширину экрана в конструкторы
         station = new Station(width);
-        mainTrain = new Train(width, false, 495, 3, Color.RED, Color.BLUE, 0); // 4-й путь (центр на 495)
-        oppositeTrain = new Train(width, true, 455, 3, Color.GREEN, Color.ORANGE, 0); // 2-й путь (центр на 455)
+        mainTrain = new Train(width, false, 495, 3, Color.RED, Color.BLUE, 0); // 4-й путь
+        oppositeTrain = new Train(width, true, 455, 3, Color.GREEN, Color.ORANGE, 0); // 2-й путь
         sun = new Sun(800, 80, 60);
     }
 
@@ -61,7 +60,6 @@ public class DrawingPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Используем метод contains для проверки клика по главному поезду
                 if (mainTrain.contains(e.getX(), e.getY())) {
                     mainTrain.honk();
                     repaint();
@@ -162,7 +160,6 @@ public class DrawingPanel extends JPanel {
 
     }
 
-    // Добавляем метод для получения предпочтительного размера
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(1000, 700);

@@ -25,14 +25,11 @@ public class Station {
     }
 
     public void draw(Graphics2D g2d) {
-        // Основное здание вокзала
-        drawMainBuilding(g2d);
-
         // Перрон и пути
         drawPlatformAndTracks(g2d);
 
-        // Навес над перроном
-        drawPlatformShelter(g2d);
+        // Основное здание вокзала
+        drawMainBuilding(g2d);
 
         // Табло с расписанием
         drawScheduleBoard(g2d);
@@ -83,7 +80,7 @@ public class Station {
         // Вывеска "ВОКЗАЛ"
         g2d.setColor(Color.RED);
         g2d.setFont(new Font("Arial", Font.BOLD, 20));
-        g2d.drawString("ВОКЗАЛ", 140, 240);
+        g2d.drawString("ВОКЗАЛ", 160, 240);
     }
 
     private void drawPlatformAndTracks(Graphics2D g2d) {
@@ -99,15 +96,11 @@ public class Station {
         // Железнодорожные пути (до краев экрана)
         drawRailwayTracks(g2d);
 
-        // Шпалы (до краев экрана)
-        g2d.setColor(new Color(101, 67, 33));
-        for (int i = 0; i < screenWidth / 20 + 1; i++) {
-            g2d.fillRect(i * 20, 435, 10, 5);
-        }
+
     }
 
     private void drawRailwayTracks(Graphics2D g2d) {
-        // Рельсы (до краев экрана)
+        // Рельсы
         g2d.setColor(Color.DARK_GRAY);
         g2d.setStroke(new BasicStroke(3));
 
@@ -142,28 +135,20 @@ public class Station {
         }
     }
 
-    private void drawPlatformShelter(Graphics2D g2d) {
-        // Опоры навеса
-        g2d.setColor(new Color(150, 150, 150));
-        for (int i = 0; i < 4; i++) {
-            g2d.fillRect(120 + i * 60, 380, 10, 20);
-        }
-
-        // Крыша навеса
-        g2d.setColor(new Color(200, 200, 200, 150));
-        int[] shelterXPoints = {100, 310, 280, 130};
-        int[] shelterYPoints = {380, 380, 360, 360};
-        g2d.fillPolygon(shelterXPoints, shelterYPoints, 4);
-
-        // Металлическая конструкция навеса
-        g2d.setColor(new Color(100, 100, 100));
-        g2d.setStroke(new BasicStroke(2));
-        for (int i = 0; i < 5; i++) {
-            g2d.drawLine(100 + i * 50, 380, 130 + i * 40, 360);
-        }
-    }
 
     private void drawScheduleBoard(Graphics2D g2d) {
+        // Основание столба
+        g2d.setColor(new Color(100, 100, 100));
+        g2d.fillRect(365, 395, 30, 10);
+
+        // Столб для табло
+        g2d.setColor(new Color(120, 120, 120));
+        g2d.fillRect(370, 360, 20, 40); // Столб под таблом
+
+        // Дополнительные детали столба
+        g2d.setColor(new Color(80, 80, 80));
+        g2d.drawRect(370, 360, 20, 40);
+
         // Основание табло
         g2d.setColor(new Color(50, 50, 50));
         g2d.fillRect(320, 280, 120, 80);
@@ -195,12 +180,6 @@ public class Station {
             drawStreetLight(g2d, 130 + i * 80, 380);
         }
 
-        // Фонари вдоль путей
-        for (int i = 0; i < screenWidth / 100; i++) {
-            drawTrackLight(g2d, i * 100 + 50, 420);
-            drawTrackLight(g2d, i * 100 + 50, 440);
-            drawTrackLight(g2d, i * 100 + 50, 460);
-        }
     }
 
     private void drawStreetLight(Graphics2D g2d, int x, int y) {
@@ -221,15 +200,7 @@ public class Station {
         g2d.fillOval(x - 15, y, 30, 30);
     }
 
-    private void drawTrackLight(Graphics2D g2d, int x, int y) {
-        // Столб фонаря вдоль путей
-        g2d.setColor(new Color(120, 120, 120));
-        g2d.fillRect(x, y, 3, 70);
 
-        // Фонарь
-        g2d.setColor(Color.ORANGE);
-        g2d.fillOval(x - 4, y - 8, 11, 11);
-    }
 
     private String addHours(String time, int hours) {
         try {
@@ -242,23 +213,47 @@ public class Station {
         }
     }
 
-    // Новый метод: получить список фонарей вдоль путей
     public List<Point> getTrackLights() {
-        return new ArrayList<>(trackLights); // Возвращаем копию для безопасности
+        return new ArrayList<>(trackLights);
     }
 
-    // Новый метод: получить прямоугольники столбов фонарей для проверки столкновений
     public List<Rectangle> getTrackLightCollisionBoxes() {
         List<Rectangle> collisionBoxes = new ArrayList<>();
         for (Point light : trackLights) {
-            // Столб фонаря: x, y, width=3, height=40
             collisionBoxes.add(new Rectangle(light.x, light.y, 3, 40));
         }
         return collisionBoxes;
     }
 
-    // Метод для получения позиции путей
     public int getTrackYPosition() {
         return 445; // Центр между рельсами
+    }
+
+
+    public Rectangle getPlatformZone() {
+        return new Rectangle(50, 360, 300, 40); // x, y, width, height
+    }
+
+    public Rectangle getShelterZone() {
+        return new Rectangle(100, 360, 210, 20); // x, y, width, height
+    }
+
+    public Point getRandomPlatformPosition() {
+        int x = 60 + (int)(Math.random() * 280); // От 60 до 340
+        int y = 370; // Уровень перрона
+        return new Point(x, y);
+    }
+
+    public Point getRandomShelterPosition() {
+        int x = 110 + (int)(Math.random() * 190); // От 110 до 300
+        int y = 370; // Уровень перрона под навесом
+        return new Point(x, y);
+    }
+
+    public boolean isValidPersonPosition(int x, int y) {
+        Rectangle platformZone = getPlatformZone();
+        Rectangle shelterZone = getShelterZone();
+
+        return platformZone.contains(x, y) || shelterZone.contains(x, y);
     }
 }
